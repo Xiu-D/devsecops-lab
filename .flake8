@@ -1,0 +1,9 @@
+[flake8]
+# Team decision: 100 columns. Most findings were E501 at 80-99 columns,
+# which hurt neither readability nor security.
+max-line-length = 100
+exclude = .venv,__pycache__,.pytest_cache
+# pytest is built on plain `assert`; tests never run with python -O,
+# so bandit's S101 does not apply to the test suite. Source code is still checked.
+per-file-ignores =
+    tests/*: S101

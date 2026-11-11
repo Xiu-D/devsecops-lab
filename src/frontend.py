@@ -19,7 +19,7 @@ RequestsInstrumentor().instrument()       # client span + adds traceparent heade
 def checkout():
     with tracer.start_as_current_span("reserve-stock") as span:
         span.set_attribute("items.count", 3)
-        time.sleep(random.uniform(0.02, 0.05))
+        time.sleep(random.uniform(0.02, 0.05))  # noqa: S311 - simulated latency, not crypto
 
     resp = requests.post("http://127.0.0.1:8081/charge",
                          json={"amount": 299, "fail": bool(request.args.get("fail"))},

@@ -37,11 +37,11 @@ def home():
 def checkout():
     with tracer.start_as_current_span("reserve-stock") as span:
         span.set_attribute("items.count", 3)
-        time.sleep(random.uniform(0.02, 0.05))          # pretend database call
+        time.sleep(random.uniform(0.02, 0.05))  # noqa: S311 - pretend database call, not crypto
 
     with tracer.start_as_current_span("charge-card") as span:
         span.set_attribute("payment.amount", 299)
-        time.sleep(random.uniform(0.10, 0.20))          # pretend payment provider
+        time.sleep(random.uniform(0.10, 0.20))  # noqa: S311 - pretend payment provider, not crypto
         if request.args.get("fail"):
             err = RuntimeError("card declined")
             span.record_exception(err)

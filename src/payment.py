@@ -21,10 +21,10 @@ def charge():
 
     with tracer.start_as_current_span("fraud-check") as span:
         span.set_attribute("payment.amount", order["amount"])
-        time.sleep(random.uniform(0.02, 0.04))
+        time.sleep(random.uniform(0.02, 0.04))  # noqa: S311 - simulated latency, not crypto
 
     with tracer.start_as_current_span("bank-authorize") as span:
-        time.sleep(random.uniform(0.08, 0.15))           # pretend external bank API
+        time.sleep(random.uniform(0.08, 0.15))  # noqa: S311 - pretend external bank API, not crypto
         if order.get("fail"):
             span.record_exception(RuntimeError("card declined"))
             span.set_status(Status(StatusCode.ERROR, "card declined"))
