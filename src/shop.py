@@ -59,7 +59,10 @@ RECEIPT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "receipts
 def receipt():
     """Return the stored receipt for an order, e.g. /receipt?id=A8-1001.txt"""
     order_id = request.args.get("id", "")
-    path = os.path.join(RECEIPT_DIR, order_id)
+    base_dir = os.path.realpath(RECEIPT_DIR)
+    path = os.path.realpath(os.path.join(base_dir, order_id))
+    if os.path.commonpath([base_dir, path]) != base_dir:
+        return "invalid receipt id\n", 400
     with open(path, encoding="utf-8") as f:
         return f.read(), 200, {"Content-Type": "text/plain; charset=utf-8"}
 
