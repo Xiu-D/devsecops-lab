@@ -3,6 +3,7 @@
 Every HTTP request becomes a trace automatically (FlaskInstrumentor).
 Inside a request we add our own child spans for the business steps.
 """
+import os
 import random
 import time
 
@@ -49,6 +50,25 @@ def checkout():
             return "payment failed\n", 502
 
     return "paid\n"
+
+
+RECEIPT_DIR = os.path.realpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "receipts"))
+
+
+@app.route("/receipt")
+def receipt():
+    """Return the stored receipt for an order, e.g. /receipt?id=A8-1001.txt"""
+    order_id = request.args.get("id", "")
+    # Resolve "..", symlinks and absolute paths, then require the result to stay
+    # inside RECEIPT_DIR (os.sep stops "receipts-evil/" from matching "receipts").
+    path = os.path.realpath(os.path.join(RECEIPT_DIR, order_id))
+    if not path.startswith(RECEIPT_DIR + os.sep):
+        return "invalid receipt id\n", 400
+    if not os.path.isfile(path):
+        return "receipt not found\n", 404
+    with open(path, encoding="utf-8") as f:
+        return f.read(), 200, {"Content-Type": "text/plain; charset=utf-8"}
 
 
 if __name__ == "__main__":
