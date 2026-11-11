@@ -1,3 +1,4 @@
+import pytest
 from opentelemetry.trace import StatusCode
 
 import shop
@@ -25,3 +26,14 @@ def test_receipt_returns_stored_receipt():
     resp = shop.app.test_client().get("/receipt?id=A8-1001.txt")
     assert resp.status_code == 200
     assert b"A8-1001" in resp.data
+
+
+@pytest.mark.parametrize("bad_id", ["../otel_setup.py", "/etc/passwd", "..%2Fshop.py", "", "."])
+def test_receipt_rejects_paths_outside_receipt_dir(bad_id):
+    resp = shop.app.test_client().get("/receipt?id=" + bad_id)
+    assert resp.status_code == 400
+
+
+def test_receipt_missing_file_is_404():
+    resp = shop.app.test_client().get("/receipt?id=missing.txt")
+    assert resp.status_code == 404
