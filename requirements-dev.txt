@@ -1,0 +1,4 @@
+-r requirements.txt
+flake8==7.5.0
+flake8-bandit==4.1.1
+pytest==9.2.0

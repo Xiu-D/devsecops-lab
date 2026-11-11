@@ -1,0 +1,14 @@
+services:
+  jaeger:
+    image: jaegertracing/jaeger:2.10.0
+    ports:
+      - "16686:16686"   # Jaeger web UI
+  otelcol:
+    image: otel/opentelemetry-collector:0.164.0
+    volumes:
+      - ./otel-collector-jaeger.yaml:/etc/otelcol/config.yaml
+      - ./out:/out
+    ports:
+      - "4317:4317"     # OTLP from our Python apps
+    depends_on:
+      - jaeger
