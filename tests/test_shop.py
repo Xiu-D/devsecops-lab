@@ -19,3 +19,9 @@ def test_failed_payment_is_marked_as_error(spans):
     by_name = {s.name: s for s in spans()}
     assert by_name["charge-card"].status.status_code == StatusCode.ERROR
     assert by_name["charge-card"].events[0].name == "exception"
+
+
+def test_receipt_returns_stored_receipt():
+    resp = shop.app.test_client().get("/receipt?id=A8-1001.txt")
+    assert resp.status_code == 200
+    assert b"A8-1001" in resp.data
