@@ -1,0 +1,23 @@
+version: 2
+updates:
+  # Python packages in requirements.txt / requirements-dev.txt
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "python"]
+
+  # Actions used in .github/workflows (e.g. actions/checkout@v4 runs on deprecated Node 20)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "github-actions"]
+
+  # Images in docker-compose.yml (collector and Jaeger are pinned)
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "docker"]
