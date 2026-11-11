@@ -4,7 +4,7 @@ services:
     ports:
       - "16686:16686"   # Jaeger web UI
   otelcol:
-    image: otel/opentelemetry-collector:0.164.0
+    image: otel/opentelemetry-collector:0.165.0
     volumes:
       - ./otel-collector-jaeger.yaml:/etc/otelcol/config.yaml
       - ./out:/out
